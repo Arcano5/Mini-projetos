@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Perfil Financeiro</title>
+    <style>
+   body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(to bottom right, #f0f4f8, #d9e2ec);
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            color: #1a73e8;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background-color: #fff;
+            padding: 20px 30px;
+            margin: 10px 0;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            width: 300px;
+            text-align: center;
+        }
+
+        .card p {
+            margin: 10px 0;
+            font-size: 1.2em;
+        }
+
+        .positivo {
+            color: green;
+            font-weight: bold;
+        }
+
+        .negativo {
+            color: red;
+            font-weight: bold;
+        }
+
+        .equilibrado {
+            color: orange;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    
+    <script>
+        var nome = prompt("Qual é o seu nome?").toLocaleUpperCase()
+        var salarioMensal = parseFloat(prompt("Qual é o valor do seu salário mensal? (em R$)"))
+        var gastoFixos = parseFloat(prompt("Qual é o valor dos seus gastos fixos mensais? (em R$)"))
+        var gastoVariaveis = parseFloat(prompt("Qual é o valor dos seus gastos variáveis mensais? (em R$)"))
+        var investimentosMensais = parseFloat(prompt("Qual é o valor dos seus investimentos mensais? (em R$)"))
+
+        var saldo = salarioMensal - (gastoFixos + gastoVariaveis + investimentosMensais)
+        var percGastos = ((gastoFixos + gastoVariaveis) / salarioMensal) * 100
+        var percInvestimentos = (investimentosMensais / salarioMensal) * 100
+
+        let classeSaldo = saldo > 0 ? "positivo" : saldo < 0 ? "negativo" : "equilibrado";
+        let mensagemSaldo = saldo > 0 ? "Parabéns! Você está economizando dinheiro."
+                        : saldo < 0 ? "Atenção! Você está gastando mais do que ganha."
+                        : "Você está equilibrado financeiramente.";
+
+        document.write(`<h1>Olá, ${nome}!</h1>`);
+            document.write(`
+        <div class="card">
+            <p>Seu saldo mensal é de <span class="${classeSaldo}">R$ ${saldo.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}</span></p>
+            <p>Você gasta ${percGastos.toFixed(2)}% do seu salário com gastos fixos e variáveis.</p>
+            <p>Você investe ${percInvestimentos.toFixed(2)}% do seu salário em investimentos.</p>
+            <p class="${classeSaldo}">${mensagemSaldo}</p>
+        </div>
+    `);
+    </script>
+</body>
+</html>
