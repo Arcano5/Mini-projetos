@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alternador de Tema</title>
+    <style>
+        body{
+            background-color: #F5F5F5; /* Cinza Claro */
+            color: #333; /*Texto escuro*/
+        }
+        .dark-mode{
+            background-color: #222; /*Cinza escuro/Preto */
+            color: #f5f5f5; /*Texto Claro*/
+        }
+        .leitura{
+            background-color:beige;
+            color: lightsalmon
+        }
+    </style>
+</head>
+<body>
+    <h1>Projeto Dark Mode</h1>
+    <p>Clique no botão para trocar o estilo da página</p>
+    <button id="dark-mode" onclick = "clicar()">
+        Dark Mode
+    </button>
+    <button id ="leitura" onclick = "document.body.classList.toggle('leitura')">
+        Modo Leitura
+    </button>
+    <script>
+        function clicar(){
+            document.body.classList.toggle("dark-mode");
+        }
+    </script>
+</body>
+</html>
