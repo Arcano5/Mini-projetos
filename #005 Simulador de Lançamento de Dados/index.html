@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador de Lançamento de Dados</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Simulador de Lançamento de Dados</h1>
+    <button id="lancarDados">🎲 Lançar Dados</button>
+    <div class="container">
+    <div class="probabilidade-info">
+        <h2>Probabilidades dos Dados</h2>
+        <p>A soma mais provável é 7!</p>
+        <div class="probabilidade-chart">
+            <!-- Aqui vamos mostrar as probabilidades visualmente -->
+        </div>
+    </div>
+    
+    <div class="resultados">
+        <h2>Histórico de Lançamentos</h2>
+        <div id="historico">
+            <p style="text-align: center; color: #666;">Clique em "Lançar Dados" para começar!</p>
+        </div>
+    </div>
+    </div>
+
+    <script>
+        // Função para obter o emoji de dado baseado no número
+        function getDadoEmoji(valor) {
+            const emojis = {
+                1: '⚀', 2: '⚁', 3: '⚂', 
+                4: '⚃', 5: '⚄', 6: '⚅'
+            };
+            return emojis[valor] || '❓';
+        }
+
+        function lancarDados() {
+            // Usa Math.random() para gerar um número aleatório entre 1 e 6
+            const dado1 = Math.floor(Math.random() * 6) + 1;
+            const dado2 = Math.floor(Math.random() * 6) + 1;
+            const soma = dado1 + dado2;
+
+            const historico = document.getElementById('historico');
+        
+            // Cria elemento para o lançamento atual
+            const lancamento = document.createElement('div');
+             lancamento.innerHTML = `
+                <div style="display: flex; align-items: center;">
+                    <span class="dado-visual">${getDadoEmoji(dado1)} ${getDadoEmoji(dado2)}</span>
+                    <p style="margin-left: 15px;">
+                        Dado 1: ${dado1}, Dado 2: ${dado2}
+                    </p>
+                </div>
+                <hr>
+        `;
+        
+        // Adiciona no início para mostrar o mais recente primeiro
+        historico.insertBefore(lancamento, historico.firstChild);
+    }
+        document.getElementById('lancarDados').addEventListener('click', lancarDados);
+    </script>
+</body>
+</html>

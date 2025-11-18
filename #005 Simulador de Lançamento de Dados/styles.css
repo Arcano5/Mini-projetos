@@ -1,0 +1,110 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Estilos Gerais */
+body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    margin: 0;
+    padding: 20px;
+    min-height: 100vh;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+/* Título Principal */
+h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 30px;
+    font-size: 2.5em;
+}
+
+/* Botão de Lançar Dados */
+#lancarDados {
+    background: linear-gradient(45deg, #FF6B6B, #4ECDC4);
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    font-size: 1.2em;
+    border-radius: 50px;
+    cursor: pointer;
+    display: block;
+    margin: 0 auto 30px;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+#lancarDados:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+/* Seção de Probabilidade */
+.probabilidade-info {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+    border-left: 5px solid #667eea;
+}
+
+.probabilidade-info h2 {
+    color: #333;
+    margin-bottom: 10px;
+}
+
+/* Resultados dos Lançamentos */
+.resultados {
+    margin-top: 30px;
+}
+
+.dado-visual {
+    font-size: 3em; /* Tamanho dos emojis */
+    margin-right: 10px;
+    }
+
+#historico p {
+    background: #e9ecef;
+    padding: 10px 15px;
+    border-radius: 8px;
+    margin: 10px 0;
+    border-left: 4px solid transparent;
+    transition: all 0.3s;
+}
+
+/* Destaque para quando tirar 7 */
+#historico p:has(+ p:contains("Sorte!")) {
+    border-left-color: #4CAF50;
+    background: #e8f5e8;
+}
+
+/* Animação para novos resultados */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+#historico p {
+    animation: fadeIn 0.5s ease-in;
+}
+
+/* Responsividade */
+@media (max-width: 600px) {
+    .container {
+        padding: 15px;
+    }
+    
+    h1 {
+        font-size: 2em;
+    }
+}
