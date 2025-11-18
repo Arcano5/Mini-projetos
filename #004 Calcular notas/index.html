@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verificador de Status do Aluno</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 800px;
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(to right, #2575fc, #6a11cb);
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.2rem;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 15px;
+        }
+        
+        .input-group label {
+            font-weight: bold;
+            color: #555;
+            margin-bottom: 5px;
+        }
+        
+        .input-group input {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            transition: border-color 0.3s;
+        }
+        
+        .input-group input:focus {
+            border-color: #2575fc;
+            outline: none;
+        }
+
+        .input-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .error-message {
+            color: #c62828;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .btn-verify {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background: #2e7d32;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.1s;
+        }
+        
+        .btn-verify:hover {
+            background: #4caf50;
+        }
+
+        /* RESULT STYLES (Your original excellent styles) */
+        
+        .status-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 25px;
+        }
+        
+        .status-box {
+            flex: 1;
+            min-width: 250px;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .status-box h3 {
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+        
+        .status-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            padding: 10px;
+            border-radius: 8px;
+        }
+        
+        .approved {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            border: 2px solid #4caf50;
+        }
+        
+        .recovery {
+            background-color: #fff3e0;
+            color: #ef6c00;
+            border: 2px solid #ff9800;
+        }
+        
+        .failed {
+            background-color: #ffebee;
+            color: #c62828;
+            border: 2px solid #f44336;
+        }
+        
+        .frequency-adequate {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            border: 2px solid #4caf50;
+        }
+        
+        .frequency-insufficient {
+            background-color: #ffebee;
+            color: #c62828;
+            border: 2px solid #f44336;
+        }
+        
+        .final-result {
+            text-align: center;
+            padding: 25px;
+            border-radius: 10px;
+            margin-top: 20px;
+            font-size: 1.4rem;
+            font-weight: bold;
+        }
+        
+        .final-approved {
+            background: linear-gradient(to right, #4caf50, #8bc34a);
+            color: white;
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
+        }
+        
+        .final-not-approved {
+            background: linear-gradient(to right, #f44336, #ff9800);
+            color: white;
+            box-shadow: 0 5px 15px rgba(244, 67, 54, 0.3);
+        }
+        
+        .details {
+            margin-top: 25px;
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        
+        .details h3 {
+            color: #2575fc;
+            margin-bottom: 15px;
+        }
+        
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .detail-label {
+            font-weight: bold;
+            color: #555;
+            margin-bottom: 5px;
+        }
+        
+        .detail-value {
+            font-size: 1.1rem;
+        }
+
+        @media (max-width: 600px) {
+            .status-container {
+                flex-direction: column;
+            }
+            .input-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Verificador de Status do Aluno</h1>
+            <p>Insira os dados do aluno abaixo para verificar o status.</p>
+        </div>
+        
+        <div class="content">
+            <!-- CAMPOS DE ENTRADA -->
+            <div class="input-grid">
+                <div class="input-group">
+                    <label for="name">Nome do Aluno:</label>
+                    <input type="text" id="name" value="João da Silva">
+                </div>
+                <div class="input-group">
+                    <label for="grade1">Nota 1 (0-10):</label>
+                    <input type="number" id="grade1" min="0" max="10" step="0.1" value="8.5">
+                </div>
+                <div class="input-group">
+                    <label for="grade2">Nota 2 (0-10):</label>
+                    <input type="number" id="grade2" min="0" max="10" step="0.1" value="6.0">
+                </div>
+                <div class="input-group">
+                    <label for="totalClasses">Total de Aulas:</label>
+                    <input type="number" id="totalClasses" min="1" value="40">
+                </div>
+                <div class="input-group">
+                    <label for="absences">Faltas:</label>
+                    <input type="number" id="absences" min="0" value="8">
+                </div>
+            </div>
+            
+            <div id="error-message" class="error-message" style="display: none;"></div>
+
+            <button class="btn-verify" onclick="verificar()">
+                Verificar Status
+            </button>
+            
+            <!-- ÁREA DE RESULTADO (ESCONDIDA POR PADRÃO) -->
+            <div id="result-content" style="display: none;">
+                <div class="final-result" id="final-result">
+                    -
+                </div>
+                <div class="status-container">
+                    <div class="status-box failed">
+                        <h3>Status das Notas</h3>
+                        <div class="status-value" id="grade-status">-</div>
+                    </div>
+                    
+                    <div class="status-box frequency-adequate">
+                        <h3>Status da Frequência</h3>
+                        <div class="status-value" id="frequency-status">-</div>
+                    </div>
+                </div>
+                
+                <div class="details">
+                    <h3>Detalhes do Cálculo</h3>
+                    <div class="details-grid">
+                        <div class="detail-item">
+                            <span class="detail-label">Média:</span>
+                            <span class="detail-value" id="average">-</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Frequência:</span>
+                            <span class="detail-value" id="frequency-percentage">-</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Função para verificar status do aluno baseado nas notas
+        function verificarStatusAluno(nota1, nota2) {
+            const media = (nota1 + nota2) / 2;
+            if (media >= 7) {
+                return { status: "Aprovado", classe: "approved", media: media };
+            } else if (media >= 5) {
+                return { status: "Recuperação", classe: "recovery", media: media };
+            } else {
+                return { status: "Reprovado", classe: "failed", media: media };
+            }
+        }
+
+        // Função para verificar frequência
+        function verificarFrequencia(faltas, totalAulas) {
+            // Garante que a frequência não seja calculada com base em zero aulas
+            if (totalAulas === 0) return { status: "Erro: Total de Aulas Zero", classe: "frequency-insufficient", percentual: 0 };
+            
+            const aulasPresentes = totalAulas - faltas;
+            const frequencia = (aulasPresentes / totalAulas) * 100;
+
+            if (frequencia >= 75) {
+                return { status: "Frequência Adequada", classe: "frequency-adequate", percentual: frequencia };
+            } else {
+                return { status: "Frequência Insuficiente", classe: "frequency-insufficient", percentual: frequencia };
+            }
+        }
+
+        // Função para validar dados do formulário
+        function validarDados(dados) {
+            if (!dados.nomeAluno.trim()) {
+                return "Nome do aluno é obrigatório!";
+            }
+            if (dados.nota1 < 0 || dados.nota1 > 10 || isNaN(dados.nota1)) {
+                return "Primeira nota deve ser um número entre 0 e 10!";
+            }
+            if (dados.nota2 < 0 || dados.nota2 > 10 || isNaN(dados.nota2)) {
+                return "Segunda nota deve ser um número entre 0 e 10!";
+            }
+            if (dados.totalAulas <= 0 || isNaN(dados.totalAulas)) {
+                return "Total de aulas deve ser um número maior que zero!";
+            }
+            if (dados.faltas < 0 || dados.faltas > dados.totalAulas || isNaN(dados.faltas)) {
+                return "Número de faltas inválido ou maior que o total de aulas!";
+            }
+            return null; // Retorna null se for válido
+        }
+
+        // Função principal (substitui iniciarVerificador)
+        function verificar() {
+            // 1. Capturar dados dos campos de input
+            const nomeAluno = document.getElementById('name').value;
+            const nota1 = parseFloat(document.getElementById('grade1').value);
+            const nota2 = parseFloat(document.getElementById('grade2').value);
+            const totalAulas = parseInt(document.getElementById('totalClasses').value);
+            const faltas = parseInt(document.getElementById('absences').value);
+            
+            const dados = { nomeAluno, nota1, nota2, totalAulas, faltas };
+            const errorMessageElement = document.getElementById('error-message');
+            const resultContentElement = document.getElementById('result-content');
+            
+            // 2. Validar dados (usando sua lógica aprimorada)
+            const validationError = validarDados(dados);
+            if (validationError) {
+                errorMessageElement.textContent = `❌ Erro de Validação: ${validationError}`;
+                errorMessageElement.style.display = 'block';
+                resultContentElement.style.display = 'none';
+                return;
+            }
+
+            errorMessageElement.style.display = 'none';
+            resultContentElement.style.display = 'block';
+            
+            // 3. Executar Lógica de Status
+            const statusNotas = verificarStatusAluno(nota1, nota2);
+            const statusFrequencia = verificarFrequencia(faltas, totalAulas);
+            
+            // 4. Atualizar a interface com os resultados
+            
+            // Status Notas
+            const gradeStatusElement = document.getElementById('grade-status');
+            gradeStatusElement.textContent = statusNotas.status;
+            gradeStatusElement.className = 'status-value ' + statusNotas.classe;
+            
+            // Status Frequência
+            const frequencyStatusElement = document.getElementById('frequency-status');
+            frequencyStatusElement.textContent = statusFrequencia.status;
+            frequencyStatusElement.className = 'status-value ' + statusFrequencia.classe;
+            
+            // Detalhes
+            document.getElementById('average').textContent = statusNotas.media.toFixed(1);
+            document.getElementById('frequency-percentage').textContent = statusFrequencia.percentual.toFixed(1) + '%';
+            
+            // Resultado Final (Lógica Condicional Central)
+            const finalResultElement = document.getElementById('final-result');
+            
+            // Se Frequência OK E Notas OK -> Aprovado
+            if (statusNotas.status === "Aprovado" && statusFrequencia.status === "Frequência Adequada") {
+                finalResultElement.textContent = `Parabéns, ${dados.nomeAluno}! Você está APROVADO(A).`;
+                finalResultElement.className = 'final-result final-approved';
+            } 
+            // Se Frequência OK E Notas em Recuperação -> Recuperação Final
+            else if (statusNotas.status === "Recuperação" && statusFrequencia.status === "Frequência Adequada") {
+                finalResultElement.textContent = `Atenção, ${dados.nomeAluno}! Você está em RECUPERAÇÃO.`;
+                finalResultElement.className = 'final-result final-not-approved';
+            }
+            // Qualquer outro caso (Reprovado por nota ou por falta) -> Reprovado
+            else {
+                finalResultElement.textContent = `${dados.nomeAluno}, o aluno não está aprovado.`;
+                finalResultElement.className = 'final-result final-not-approved';
+            }
+        }
+        
+        // Inicializa o verificador para exibir um resultado inicial (opcional, pode ser removido)
+        window.onload = verificar; 
+    </script>
+</body>
+</html>
