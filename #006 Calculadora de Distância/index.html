@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora da Hipotenusa</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Estilos Gerais */
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #d6a915 0%, #2c36ca 100%);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #333;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            margin-top: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #fff;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #fff;
+            margin-bottom: 30px;
+            font-size: 1.2em;
+        }
+
+        .calculator-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            justify-content: space-between;
+        }
+
+        .input-section {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .visualization-section {
+            flex: 1;
+            min-width: 300px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .history-section {
+            width: 100%;
+            margin-top: 30px;
+        }
+
+        form {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #444;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            border-color: #2c36ca;
+            outline: none;
+        }
+
+        button {
+            background: linear-gradient(135deg, #d6a915 0%, #2c36ca 100%);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: transform 0.2s, box-shadow 0.2s;
+            width: 100%;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e8f4fd;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #2c36ca;
+            border-left: 5px solid #2c36ca;
+        }
+
+        .triangle-container {
+            width: 100%;
+            max-width: 300px;
+            height: 200px;
+            position: relative;
+            margin: 20px 0;
+        }
+
+        .triangle {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-left: 100px solid transparent;
+            border-right: 100px solid transparent;
+            border-bottom: 150px solid #d6a915;
+            transition: all 0.5s ease;
+        }
+
+        .side-label {
+            position: absolute;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .side-a-label {
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .side-b-label {
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+        }
+
+        .hypotenuse-label {
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .history-section h3 {
+            margin-bottom: 15px;
+            color: #444;
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 8px;
+        }
+
+        .history-list {
+            max-height: 200px;
+            overflow-y: auto;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+        }
+
+        .history-item {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .history-item:last-child {
+            border-bottom: none;
+        }
+
+        .clear-history {
+            margin-top: 15px;
+            background: #dc3545;
+            width: auto;
+            padding: 8px 15px;
+            font-size: 14px;
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .calculator-container {
+                flex-direction: column;
+            }
+            
+            .input-section, .visualization-section {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+            
+            .subtitle {
+                font-size: 1em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Calculadora da Hipotenusa</h1>
+    <p class="subtitle">Calcule a hipotenusa de um triângulo retângulo usando o Teorema de Pitágoras</p>
+    
+    <div class="container">
+        <div class="calculator-container">
+            <div class="input-section">
+                <form id="distanceForm">
+                    <div class="form-group">
+                        <label for="sideA">Comprimento do cateto A:</label>
+                        <input type="number" id="sideA" name="sideA" min="0.1" step="0.1" required placeholder="Ex: 3">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="sideB">Comprimento do cateto B:</label>
+                        <input type="number" id="sideB" name="sideB" min="0.1" step="0.1" required placeholder="Ex: 4">
+                    </div>
+                    
+                    <button type="submit">Calcular Hipotenusa</button>
+                </form>
+                
+                <div id="result" class="result"></div>
+            </div>
+            
+            <div class="visualization-section">
+                <h3>Visualização do Triângulo</h3>
+                <div class="triangle-container">
+                    <div class="triangle" id="triangle"></div>
+                    <div class="side-label side-a-label" id="sideALabel">A</div>
+                    <div class="side-label side-b-label" id="sideBLabel">B</div>
+                    <div class="side-label hypotenuse-label" id="hypotenuseLabel">C</div>
+                </div>
+                <p>Legenda: A e B são os catetos, C é a hipotenusa</p>
+            </div>
+        </div>
+        
+        <div class="history-section">
+            <h3>Histórico de Cálculos</h3>
+            <div class="history-list" id="historyList"></div>
+            <button class="clear-history" id="clearHistory">Limpar Histórico</button>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('distanceForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            const sideA = parseFloat(document.getElementById('sideA').value);
+            const sideB = parseFloat(document.getElementById('sideB').value);
+            
+            // Validação
+            if (isNaN(sideA) || isNaN(sideB) || sideA <= 0 || sideB <= 0) {
+                document.getElementById('result').innerText = 'Por favor, insira valores válidos maiores que zero.';
+                document.getElementById('result').style.color = '#dc3545';
+                return;
+            }
+            
+            // Cálculo da hipotenusa
+            const hypotenuse = Math.sqrt(Math.pow(sideA, 2) + Math.pow(sideB, 2));
+            
+            // Exibir resultado
+            document.getElementById('result').innerHTML = `
+                <div>Cateto A: ${sideA.toFixed(2)}</div>
+                <div>Cateto B: ${sideB.toFixed(2)}</div>
+                <div style="margin-top: 10px; font-size: 1.2em;">Hipotenusa: <strong>${hypotenuse.toFixed(2)}</strong></div>
+            `;
+            document.getElementById('result').style.color = '#2c36ca';
+            
+            // Atualizar visualização
+            updateTriangleVisualization(sideA, sideB, hypotenuse);
+            
+            // Adicionar ao histórico
+            addToHistory(sideA, sideB, hypotenuse);
+        });
+        
+        function updateTriangleVisualization(sideA, sideB, hypotenuse) {
+            const triangle = document.getElementById('triangle');
+            const maxDimension = 200;
+            
+            // Calcular proporções para visualização
+            const scale = Math.min(maxDimension / Math.max(sideA, sideB, hypotenuse), 1);
+            
+            // Atualizar labels
+            document.getElementById('sideALabel').textContent = `A: ${sideA.toFixed(1)}`;
+            document.getElementById('sideBLabel').textContent = `B: ${sideB.toFixed(1)}`;
+            document.getElementById('hypotenuseLabel').textContent = `C: ${hypotenuse.toFixed(1)}`;
+            
+            // Calcular ângulo para rotação do triângulo
+            const angle = Math.atan(sideA / sideB) * (180 / Math.PI);
+            
+            // Aplicar transformações
+            triangle.style.borderLeft = `${sideB * scale}px solid transparent`;
+            triangle.style.borderRight = `${sideB * scale}px solid transparent`;
+            triangle.style.borderBottom = `${sideA * scale}px solid #d6a915`;
+            triangle.style.transform = `rotate(${angle}deg)`;
+        }
+        
+        function addToHistory(sideA, sideB, hypotenuse) {
+            const historyList = document.getElementById('historyList');
+            const historyItem = document.createElement('div');
+            historyItem.className = 'history-item';
+            
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+            
+            historyItem.innerHTML = `
+                <span>${sideA.toFixed(2)}² + ${sideB.toFixed(2)}² = ${hypotenuse.toFixed(2)}²</span>
+                <span>${timeString}</span>
+            `;
+            
+            historyList.prepend(historyItem);
+            
+            // Limitar histórico a 10 itens
+            if (historyList.children.length > 10) {
+                historyList.removeChild(historyList.lastChild);
+            }
+        }
+        
+        document.getElementById('clearHistory').addEventListener('click', function() {
+            document.getElementById('historyList').innerHTML = '';
+        });
+        
+        // Inicializar com valores padrão
+        document.getElementById('sideA').value = 3;
+        document.getElementById('sideB').value = 4;
+        document.getElementById('distanceForm').dispatchEvent(new Event('submit'));
+    </script>
+</body>
+</html>
